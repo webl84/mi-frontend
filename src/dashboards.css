@@ -1,0 +1,10 @@
+.btn-dasboard{
+    display: flex; 
+    align-items: center; 
+    background: transparent; 
+    color: #000
+} 
+.sidebar {background: #fff; 
+        display: flex;
+    justify-content: space-between;
+}
