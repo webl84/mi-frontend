@@ -24,7 +24,7 @@ function AgregarResena() {
   useEffect(() => {
     const fetchNegocios = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/negocios");
+        const res = await axios.get("https://mi-backend-tz1u.onrender.com/api/negocios");
         setNegocios(res.data);
       } catch (error) {
         setMensaje("Error al cargar los negocios.");
@@ -73,7 +73,7 @@ function AgregarResena() {
         });
       }
 
-      await axios.post("http://localhost:5000/api/resenas", formDataToSend);
+      await axios.post("https://mi-backend-tz1u.onrender.com/api/resenas", formDataToSend);
       setMensaje("¡Reseña publicada con éxito!");
 
       setFormData({
@@ -97,7 +97,7 @@ function AgregarResena() {
 
   const enviarSugerencia = async () => {
     try {
-      await axios.post("http://localhost:5000/api/sugerencias", sugerencia);
+      await axios.post("https://mi-backend-tz1u.onrender.com/api/sugerencias", sugerencia);
       alert("Gracias por tu sugerencia.");
       setSugerencia({ nombre: "", descripcion: "" });
       setMostrarSugerencia(false);
