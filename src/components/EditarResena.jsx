@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import Select from "react-select";
 import HeaderPages from "../components/HeaderPages";
 
-const URL_BASE = "http://localhost:5000/uploads/";
+const URL_BASE = "https://mi-backend-tz1u.onrender.com/uploads/";
 
 function EditarResena() {
   const { id } = useParams();
@@ -35,8 +35,8 @@ function EditarResena() {
     const fetchData = async () => {
       try {
         const [resNegocios, resResena] = await Promise.all([
-          axios.get("http://localhost:5000/api/negocios"),
-          axios.get(`http://localhost:5000/api/resenas/${id}`),
+          axios.get("https://mi-backend-tz1u.onrender.com/api/negocios"),
+          axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/${id}`),
         ]);
 
         setNegocios(resNegocios.data);
@@ -131,7 +131,7 @@ function EditarResena() {
       formData.foto.forEach((file) => data.append("foto", file));
       fotosAEliminar.forEach((f) => data.append("fotosAEliminar", f));
 
-      await axios.put(`http://localhost:5000/api/resenas/${id}`, data, {
+      await axios.put(`https://mi-backend-tz1u.onrender.com/api/resenas/${id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

@@ -46,7 +46,7 @@ const CrearNegocio = () => {
   useEffect(() => {
     const obtenerCategorias = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/categorias');
+        const response = await axios.get('https://mi-backend-tz1u.onrender.com/api/categorias');
         setCategorias(response.data);
       } catch (error) {
         console.error('Error al cargar categorías:', error);
@@ -94,7 +94,7 @@ const CrearNegocio = () => {
     formData.append('clienteId', clienteID);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/negocios/', formData, {
+      const response = await axios.post('https://mi-backend-tz1u.onrender.com/api/negocios/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,

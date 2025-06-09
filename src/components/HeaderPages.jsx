@@ -12,7 +12,7 @@ const Header = () => {
     const id = localStorage.getItem("usuarioId") || getCookie("usuarioId");
     if (id) {
       axios
-        .get(`http://localhost:5000/api/usuarios/perfil/${id}`)
+        .get(`https://mi-backend-tz1u.onrender.com/api/usuarios/perfil/${id}`)
         .then((res) => {
           setUsuario({ ...res.data, id });
         })
@@ -94,7 +94,7 @@ const Header = () => {
                         usuario.foto
                           ? usuario.foto.startsWith("http")
                             ? usuario.foto
-                            : `http://localhost:5000/${usuario.foto.replace(/^\/+/, "")}`
+                            : `https://mi-backend-tz1u.onrender.com/${usuario.foto.replace(/^\/+/, "")}`
                           : usuario.avatar
                           ? usuario.avatar
                           : `https://api.dicebear.com/7.x/micah/svg?seed=${usuario.id}`

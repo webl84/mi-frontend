@@ -33,7 +33,7 @@ const EditarPerfil = () => {
     const id = localStorage.getItem('usuarioId') || getCookie('usuarioId');
     if (id) {
       setUsuarioId(id);
-      axios.get(`http://localhost:5000/api/usuarios/perfil/${id}`)
+      axios.get(`https://mi-backend-tz1u.onrender.com/api/usuarios/perfil/${id}`)
         .then(response => {
           setData(response.data);
           setNombre(response.data.nombre);
@@ -80,7 +80,7 @@ const EditarPerfil = () => {
       datosActualizados.append('foto', avatarSeleccionado);
     }
 
-    axios.put(`http://localhost:5000/api/usuarios/${usuarioId}/actualizarPerfil`, datosActualizados)
+    axios.put(`https://mi-backend-tz1u.onrender.com/api/usuarios/${usuarioId}/actualizarPerfil`, datosActualizados)
       .then(response => {
         alert('Perfil actualizado correctamente');
         setData(response.data);

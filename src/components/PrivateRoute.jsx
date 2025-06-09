@@ -8,7 +8,7 @@ const PrivateRoute = () => {
   useEffect(() => {
     const verificarAutenticacion = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/verify", {
+        const res = await fetch("https://mi-backend-tz1u.onrender.com/api/verify", {
           method: "GET",
           credentials: "include",
         });
