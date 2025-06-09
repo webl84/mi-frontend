@@ -22,11 +22,11 @@ const DashboardUsuario = () => {
     const id = localStorage.getItem('usuarioId') || getCookie('usuarioId');
     if (id) {
       setUsuarioId(id);
-      axios.get(`http://localhost:5000/api/usuarios/perfil/${id}`)
+      axios.get(`https://mi-backend-tz1u.onrender.com/api/usuarios/perfil/${id}`)
         .then(res => setData(res.data))
         .catch(err => console.error('Error al cargar perfil', err));
 
-      axios.get(`http://localhost:5000/api/resenas/usuario/${id}`)
+      axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/usuario/${id}`)
         .then(res => setReseñas(res.data))
         .catch(err => console.error('Error al cargar reseñas', err));
     }
@@ -45,7 +45,7 @@ const DashboardUsuario = () => {
   };
 
   const avatarSrc = data.foto
-    ? (data.foto.startsWith('http') ? data.foto : `http://localhost:5000/${data.foto.replace(/^\/+/, '')}`)
+    ? (data.foto.startsWith('http') ? data.foto : `https://mi-backend-tz1u.onrender.com/${data.foto.replace(/^\/+/, '')}`)
     : data.avatar || `https://api.dicebear.com/7.x/micah/svg?seed=${usuarioId}`;
 
   const eliminarResena = async (id) => {
@@ -58,7 +58,7 @@ const DashboardUsuario = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/resenas/${id}`, {
+      await axios.delete(`https://mi-backend-tz1u.onrender.com/api/resenas/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -212,7 +212,7 @@ const DashboardUsuario = () => {
                 {fotos.map((img, idx) => (
                   <img
                     key={idx}
-                    src={img.startsWith('http') ? img : `http://localhost:5000/${img.replace(/^\/+/, '')}`}
+                    src={img.startsWith('http') ? img : `https://mi-backend-tz1u.onrender.com/${img.replace(/^\/+/, '')}`}
                     alt={`Foto reseña ${idx + 1}`}
                     className="w-16 h-16 object-cover rounded-md border"
                   />
@@ -257,7 +257,7 @@ const DashboardUsuario = () => {
                           {fotos.map((img, idx) => (
                             <img
                               key={idx}
-                              src={img.startsWith('http') ? img : `http://localhost:5000/${img.replace(/^\/+/, '')}`}
+                              src={img.startsWith('http') ? img : `https://mi-backend-tz1u.onrender.com/${img.replace(/^\/+/, '')}`}
                               alt={`Foto reseña ${idx + 1}`}
                               className="w-24 h-24 object-cover rounded-md border"
                             />

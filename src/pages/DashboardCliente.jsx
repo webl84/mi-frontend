@@ -28,7 +28,7 @@ const DashboardCliente = () => {
         const token = localStorage.getItem('token');
 
         // Obtener negocios
-        const responseNegocios = await axios.get('http://localhost:5000/api/negocios/mis-negocios', {
+        const responseNegocios = await axios.get('https://mi-backend-tz1u.onrender.com/api/negocios/mis-negocios', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (Array.isArray(responseNegocios.data)) {
@@ -36,7 +36,7 @@ const DashboardCliente = () => {
         }
 
         // Obtener reseñas
-        const responseResenas = await axios.get(`http://localhost:5000/api/resenas/cliente/${clienteId}`, {
+        const responseResenas = await axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/cliente/${clienteId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (Array.isArray(responseResenas.data)) {
@@ -177,7 +177,7 @@ const DashboardCliente = () => {
                       src={negocio.logo_imagen
                         ? negocio.logo_imagen.startsWith('http')
                           ? negocio.logo_imagen
-                          : `http://localhost:5000/uploads/${negocio.logo_imagen}`
+                          : `https://mi-backend-tz1u.onrender.com/uploads/${negocio.logo_imagen}`
                         : 'https://via.placeholder.com/100'}
                       alt={negocio.nombre}
                       className="h-24 w-24 mx-auto object-cover rounded-full mb-4"

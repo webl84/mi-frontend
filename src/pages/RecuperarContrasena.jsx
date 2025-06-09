@@ -13,7 +13,7 @@ function RecuperarContrasena() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/usuarios/recuperar-contrasena", {
+      const response = await axios.post("https://mi-backend-tz1u.onrender.com/api/usuarios/recuperar-contrasena", {
         email,
       });
       setMensaje(response.data.message);
