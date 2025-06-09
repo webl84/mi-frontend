@@ -40,7 +40,7 @@ function App() {
       <Route path="/prueba-estrellas" element={<PruebaEstrellas />} />
       <Route path="/editar-negocio/:id" element={<EditarNegocio />} />
       <Route path="/perfil" element={<PerfilUsuario />} />
-
+ <Route path="resena/nueva" element={<AgregarResena />} />
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Registro />} />
@@ -55,7 +55,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="/resena/editar/:id" element={<EditarResena />} />
 
-          <Route path="resena/nueva" element={<AgregarResena />} />
+         
           {/* Aquí cambiamos de `component` a `element` */}
           
         </Route>
