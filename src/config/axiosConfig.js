@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Crear una instancia de axios
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/api', // Aquí va la URL base de tu API
+  baseURL: 'https://mi-backend-tz1u.onrender.com/api', // Aquí va la URL base de tu API
   // Otros ajustes globales si es necesario
 });
 
