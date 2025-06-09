@@ -27,7 +27,7 @@ const EditarNegocio = () => {
   useEffect(() => {
     const obtenerCategorias = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/categorias');
+        const response = await axios.get('https://mi-backend-tz1u.onrender.com/api/categorias');
         setCategorias(response.data);
       } catch (error) {
         console.error('Error al cargar categorías:', error);
@@ -39,7 +39,7 @@ const EditarNegocio = () => {
   useEffect(() => {
     const obtenerNegocio = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/negocios/${id}`);
+        const res = await axios.get(`https://mi-backend-tz1u.onrender.com/api/negocios/${id}`);
         const negocio = res.data;
 
         setNombre(negocio.nombre || '');
@@ -115,7 +115,7 @@ const EditarNegocio = () => {
     }
 
     try {
-      const response = await axios.put(`http://localhost:5000/api/negocios/${id}`, formData, {
+      const response = await axios.put(`https://mi-backend-tz1u.onrender.com/api/negocios/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -176,7 +176,7 @@ const EditarNegocio = () => {
           {imagen && (
             <img
               src={typeof imagen === 'string'
-                ? (imagen.startsWith('http') ? imagen : `http://localhost:5000/uploads/${imagen}`)
+                ? (imagen.startsWith('http') ? imagen : `https://mi-backend-tz1u.onrender.com/uploads/${imagen}`)
                 : URL.createObjectURL(imagen)}
               alt="Imagen"
               className="mt-2 w-32 h-32 object-cover"
@@ -191,7 +191,7 @@ const EditarNegocio = () => {
           {logoImagen && (
             <img
               src={typeof logoImagen === 'string'
-                ? (logoImagen.startsWith('http') ? logoImagen : `http://localhost:5000/uploads/${logoImagen}`)
+                ? (logoImagen.startsWith('http') ? logoImagen : `https://mi-backend-tz1u.onrender.com/uploads/${logoImagen}`)
                 : URL.createObjectURL(logoImagen)}
               alt="Logo"
               className="mt-2 w-20 h-20 object-cover"
@@ -208,7 +208,7 @@ const EditarNegocio = () => {
               <img
                 key={idx}
                 src={typeof img === 'string'
-                  ? (img.startsWith('http') ? img : `http://localhost:5000/${img}`)
+                  ? (img.startsWith('http') ? img : `https://mi-backend-tz1u.onrender.com/${img}`)
                   : URL.createObjectURL(img)}
                 alt={`Banner ${idx}`}
                 className="w-24 h-24 object-cover"

@@ -9,7 +9,7 @@ const Categories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/categorias");
+        const response = await axios.get("https://mi-backend-tz1u.onrender.com/api/categorias");
         setCategories(response.data);
       } catch (error) {
         console.error("Error al cargar categorías:", error);

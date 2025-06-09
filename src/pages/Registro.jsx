@@ -24,7 +24,7 @@ function Registro() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/usuarios/register", formData);
+      await axios.post("https://mi-backend-tz1u.onrender.com/usuarios/register", formData);
       alert("Registro exitoso");
       navigate("/login");
     } catch (err) {

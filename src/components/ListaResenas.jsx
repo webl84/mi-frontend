@@ -33,7 +33,7 @@ const ListaResenas = () => {
   useEffect(() => {
     const fetchResenas = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/resenas/");
+        const res = await axios.get("https://mi-backend-tz1u.onrender.com/api/resenas/");
         setResenas(res.data);
       } catch (error) {
         console.error("Error al cargar las reseñas:", error);
@@ -103,7 +103,7 @@ const ListaResenas = () => {
                       usuario.foto
                         ? usuario.foto.startsWith("http")
                           ? usuario.foto
-                          : `http://localhost:5000/uploads/${usuario.foto}`
+                          : `https://mi-backend-tz1u.onrender.com/uploads/${usuario.foto}`
                         : "/default-user.jpg"
                     }
                     alt="Perfil del usuario"
@@ -123,7 +123,7 @@ const ListaResenas = () => {
                       src={
                         negocio.imagen?.startsWith("http")
                           ? negocio.imagen
-                          : `http://localhost:5000/${negocio.imagen}`
+                          : `https://mi-backend-tz1u.onrender.com/${negocio.imagen}`
                       }
                       alt="Imagen del negocio"
                       className="w-full max-w-md rounded shadow hover:opacity-90 transition"

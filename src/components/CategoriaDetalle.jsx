@@ -29,7 +29,7 @@ const CategoriaDetalle = () => {
 
   const fetchCategoria = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/categorias/${id}`);
+      const response = await axios.get(`https://mi-backend-tz1u.onrender.com/api/categorias/${id}`);
       setCategoria(response.data.categoria);
 
       const negociosConResenas = await Promise.all(
@@ -51,7 +51,7 @@ const CategoriaDetalle = () => {
 
   const fetchResenas = async (negocioId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/resenas/negocio/${negocioId}`);
+      const res = await axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/negocio/${negocioId}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.status === 404) return [];
@@ -62,7 +62,7 @@ const CategoriaDetalle = () => {
 
   const fetchTotalResenas = async (negocioId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/resenas/count/${negocioId}`);
+      const res = await axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/count/${negocioId}`);
       return res.data.total;
     } catch (error) {
       setErrorResenas("Error al obtener el total de reseñas.");

@@ -69,7 +69,7 @@ const DetalleNegocio = () => {
 
   const abrirLightbox = (images, index) => {
     const fullUrls = images.map(img =>
-      img.startsWith("http") ? img : `http://localhost:5000/${img.replace(/^\/+/, '')}`
+      img.startsWith("http") ? img : `https://mi-backend-tz1u.onrender.com/${img.replace(/^\/+/, '')}`
     );
     setLightboxImages(fullUrls);
     setPhotoIndex(index);
@@ -78,7 +78,7 @@ const DetalleNegocio = () => {
 
   const fetchNegocio = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/negocios/${id}`);
+      const res = await axios.get(`https://mi-backend-tz1u.onrender.com/api/negocios/${id}`);
       setNegocio(res.data);
     } catch (error) {
       console.error("Error al cargar el negocio:", error.response?.data || error.message);
@@ -87,7 +87,7 @@ const DetalleNegocio = () => {
 
   const fetchResenas = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/resenas/negocio/${id}`);
+      const res = await axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/negocio/${id}`);
       setResenas(res.data);
       setPromedioResenas(calcularPromedio(res.data));
     } catch (error) {
@@ -97,7 +97,7 @@ const DetalleNegocio = () => {
 
   const fetchTotalResenas = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/resenas/count/${id}`);
+      const res = await axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/count/${id}`);
       setTotalResenas(res.data.total);
     } catch (error) {
       console.error("Error al obtener total de reseñas:", error.response?.data || error.message);
@@ -150,7 +150,7 @@ const DetalleNegocio = () => {
           {imagenes.map((img, index) => (
             <div key={index}>
               <img
-                src={img.startsWith("http") ? img : `http://localhost:5000/${img}`}
+                src={img.startsWith("http") ? img : `https://mi-backend-tz1u.onrender.com/${img}`}
                 alt={`Imagen ${index + 1}`}
                 className="w-full h-[426px] object-cover rounded"
               />
@@ -318,7 +318,7 @@ const DetalleNegocio = () => {
                       resena.usuarioId?.foto
                         ? (resena.usuarioId.foto.startsWith("http")
                           ? resena.usuarioId.foto
-                          : `http://localhost:5000/${resena.usuarioId.foto.replace(/^\/+/, '')}`)
+                          : `https://mi-backend-tz1u.onrender.com/${resena.usuarioId.foto.replace(/^\/+/, '')}`)
                         : "https://cdn-icons-png.flaticon.com/512/147/147144.png"
                     }
                     alt={`${resena.usuarioId?.nombre || "Usuario"} perfil`}
@@ -337,7 +337,7 @@ const DetalleNegocio = () => {
                     {resena.foto.map((img, idx) => (
                       <img
                         key={idx}
-                        src={img.startsWith("http") ? img : `http://localhost:5000/${img.replace(/^\/+/, '')}`}
+                        src={img.startsWith("http") ? img : `https://mi-backend-tz1u.onrender.com/${img.replace(/^\/+/, '')}`}
                         alt={`Foto ${idx + 1}`}
                         className="w-20 h-20 object-cover rounded cursor-pointer hover:opacity-80"
                         onClick={() => abrirLightbox(resena.foto, idx)}
