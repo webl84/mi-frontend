@@ -39,8 +39,7 @@ function App() {
         <Route path="/dashboard/admin" element={<DashboardAdmin />} />
       <Route path="/prueba-estrellas" element={<PruebaEstrellas />} />
       <Route path="/editar-negocio/:id" element={<EditarNegocio />} />
-      <Route path="/perfil" element={<PerfilUsuario />} />
- <Route path="resena/nueva" element={<AgregarResena />} />
+
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/register" element={<Registro />} />
@@ -48,7 +47,9 @@ function App() {
         <Route path="/producto/:id" element={<DetalleProducto />} />
         <Route path="/recuperar-contrasena" element={<RecuperarContrasena />} /> 
         <Route path="/recuperar-contrasena/:token" element={<NuevaContrasena />} />
-        <Route path="/categorias/:id" element={<CategoriaDetalle />} />
+        <Route path="/categorias/:id" element={<CategoriaDetalle />} /> 
+              <Route path="/perfil" element={<PerfilUsuario />} />
+ <Route path="resena/nueva" element={<AgregarResena />} />
         <Route path="/negocios/:id" element={<DetalleNegocio />} /> {/* Ruta para el detalle del negocio */}
         {/* Usamos el componente PrivateRoute para proteger las rutas internas */}
         <Route element={<PrivateRoute />}>
