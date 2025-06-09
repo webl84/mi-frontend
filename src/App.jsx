@@ -49,7 +49,7 @@ function App() {
         <Route path="/recuperar-contrasena" element={<RecuperarContrasena />} /> 
         <Route path="/recuperar-contrasena/:token" element={<NuevaContrasena />} />
         <Route path="/categorias/:id" element={<CategoriaDetalle />} />
-
+        <Route path="/negocios/:id" element={<DetalleNegocio />} /> {/* Ruta para el detalle del negocio */}
         {/* Usamos el componente PrivateRoute para proteger las rutas internas */}
         <Route element={<PrivateRoute />}>
           <Route path="dashboard" element={<Dashboard />} />
@@ -57,7 +57,7 @@ function App() {
 
           <Route path="resena/nueva" element={<AgregarResena />} />
           {/* Aquí cambiamos de `component` a `element` */}
-          <Route path="/negocios/:id" element={<DetalleNegocio />} /> {/* Ruta para el detalle del negocio */}
+          
         </Route>
       </Routes>
     </Router>
