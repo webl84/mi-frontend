@@ -18,7 +18,7 @@ const DashboardUsuario = () => {
 
   const reseñasOrdenadas = reseñas.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  useEffect(() => {
+  /*useEffect(() => {
     const id = localStorage.getItem('usuarioId') || getCookie('usuarioId');
     if (id) {
       setUsuarioId(id);
@@ -30,7 +30,38 @@ const DashboardUsuario = () => {
         .then(res => setReseñas(res.data))
         .catch(err => console.error('Error al cargar reseñas', err));
     }
-  }, []);
+  }, []);*/ 
+
+
+  useEffect(() => {
+  axios.get('https://mi-backend-tz1u.onrender.com/api/verify', {
+    withCredentials: true,
+  })
+    .then(res => {
+      if (res.data.authenticated) {
+        const id = res.data.user.id;
+        setUsuarioId(id);
+
+        // Cargar perfil del usuario
+        axios.get(`https://mi-backend-tz1u.onrender.com/api/usuarios/perfil/${id}`)
+          .then(res => setData(res.data))
+          .catch(err => console.error('Error al cargar perfil', err));
+
+        // Cargar reseñas del usuario
+        axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/usuario/${id}`)
+          .then(res => setReseñas(res.data))
+          .catch(err => console.error('Error al cargar reseñas', err));
+      } else {
+        console.log("No autenticado");
+        navigate("/login");
+      }
+    })
+    .catch(err => {
+      console.error('Error al verificar autenticación', err);
+      navigate("/login");
+    });
+}, []);
+
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
