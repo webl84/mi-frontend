@@ -18,7 +18,7 @@ function DashboardRouter() {
           return navigate("/login");
         }
 
-        const { data } = await axios.get(`http://localhost:5000/usuarios/perfil/${usuarioId}`, {
+        const { data } = await axios.get(`https://mi-backend-tz1u.onrender.com/usuarios/perfil/${usuarioId}`, {
           withCredentials: true,
         });
 
