@@ -37,13 +37,14 @@ const Header = () => {
     });
 }, []);
 
+console.log("Usuario cargado en Header:", usuario); // 👈 agrega aquí
 
-  const getCookie = (name) => {
+  /*const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(";").shift();
   };
-
+*/
   const handleLogout = () => {
     localStorage.removeItem("usuarioId");
     document.cookie = "usuarioId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
