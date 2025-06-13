@@ -2,61 +2,57 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 
-// Función para obtener el valor de una cookie
-function getCookie(name) {
-  let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  if (match) return match[2];
-  return null;
-}
-
 const DashboardCliente = () => {
   const [negocios, setNegocios] = useState([]);
   const [reseñas, setReseñas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [tabActual, setTabActual] = useState('dashboard'); // Estado para manejar el tab actual
-
-  const clienteId = getCookie('usuarioId');
+  const [tabActual, setTabActual] = useState('dashboard');
 
   useEffect(() => {
-    if (!clienteId) {
-      console.error('No se encontró el cliente ID en las cookies');
-      return;
-    }
+    axios.get('https://mi-backend-tz1u.onrender.com/api/verify', {
+      withCredentials: true,
+    })
+      .then(async (res) => {
+        if (res.data.authenticated && res.data.user.rol === 'cliente') {
+          const clienteId = res.data.user.id;
 
-    const fetchNegociosYResenas = async () => {
-      try {
-        const token = localStorage.getItem('token');
+          try {
+            // Obtener negocios
+            const responseNegocios = await axios.get('https://mi-backend-tz1u.onrender.com/api/negocios/mis-negocios', {
+              withCredentials: true,
+            });
+            if (Array.isArray(responseNegocios.data)) {
+              setNegocios(responseNegocios.data);
+            }
 
-        // Obtener negocios
-        const responseNegocios = await axios.get('https://mi-backend-tz1u.onrender.com/api/negocios/mis-negocios', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (Array.isArray(responseNegocios.data)) {
-          setNegocios(responseNegocios.data);
+            // Obtener reseñas
+            const responseResenas = await axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/cliente/${clienteId}`, {
+              withCredentials: true,
+            });
+            if (Array.isArray(responseResenas.data)) {
+              setReseñas(responseResenas.data);
+            }
+          } catch (error) {
+            console.error('Error al obtener los datos:', error);
+          } finally {
+            setLoading(false);
+          }
+
+        } else {
+          console.warn("No autenticado o no es cliente");
+          window.location.href = "/login";
         }
-
-        // Obtener reseñas
-        const responseResenas = await axios.get(`https://mi-backend-tz1u.onrender.com/api/resenas/cliente/${clienteId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (Array.isArray(responseResenas.data)) {
-          setReseñas(responseResenas.data);
-        }
-      } catch (error) {
-        console.error('Error al obtener los datos:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNegociosYResenas();
-  }, [clienteId]);
+      })
+      .catch(err => {
+        console.error('Error al verificar autenticación', err);
+        window.location.href = "/login";
+      });
+  }, []);
 
   const handleLogout = () => {
-    // Eliminar cookies de sesión
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "usuarioId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    window.location.href = "/login"; // Redirigir al login
+    window.location.href = "/login";
   };
 
   return (
@@ -100,7 +96,6 @@ const DashboardCliente = () => {
 
       {/* Main Content */}
       <main className="flex-1 ml-64 p-8">
-        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold">
             {tabActual === 'dashboard' && 'Dashboard Cliente'}
@@ -117,7 +112,6 @@ const DashboardCliente = () => {
         {/* Contenido dinámico */}
         {tabActual === 'dashboard' && (
           <>
-            {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <div className="bg-white p-4 rounded-lg shadow text-center">
                 <p className="text-blue-500 font-semibold">Negocios</p>
@@ -141,7 +135,6 @@ const DashboardCliente = () => {
               </div>
             </div>
 
-            {/* Últimas Reseñas */}
             <div className="bg-white p-6 rounded-lg shadow">
               <h2 className="text-lg font-semibold mb-4">Últimas Reseñas</h2>
               {reseñas.length > 0 ? (
@@ -188,7 +181,7 @@ const DashboardCliente = () => {
                       <Link to={`/editar-negocio/${negocio._id}`} className="text-blue-500">
                         Editar
                       </Link>
-                      <button onClick={() => handleDeleteNegocio(negocio._id)} className="text-red-500">
+                      <button onClick={() => alert('Eliminar no implementado aún')} className="text-red-500">
                         Eliminar
                       </button>
                     </div>
