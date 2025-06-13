@@ -106,7 +106,7 @@ console.log("Usuario cargado en Header:", usuario); // 👈 agrega aquí
                   onClick={() => setSubmenuAbierto(!submenuAbierto)}
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden border">
-                    <img
+                    {/*  <img
                       src={
                         usuario.foto
                           ? usuario.foto.startsWith("http")
@@ -118,7 +118,12 @@ console.log("Usuario cargado en Header:", usuario); // 👈 agrega aquí
                       }
                       alt="avatar"
                       className="w-full h-full object-cover"
-                    />
+                    /> */} 
+                    <img
+  src={usuario.foto || `https://api.dicebear.com/7.x/micah/svg?seed=${usuario.id}`}
+  alt="avatar"
+  className="w-full h-full object-cover"
+/>
                   </div>
                   <span>{usuario.nombre}</span>
                 </div>
