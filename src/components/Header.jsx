@@ -7,7 +7,7 @@ const Header = () => {
   const [submenuAbierto, setSubmenuAbierto] = useState(false);
   const navigate = useNavigate();
   const submenuRef = useRef(null);
-
+/*
   useEffect(() => {
     const id = localStorage.getItem("usuarioId") || getCookie("usuarioId");
     if (id) {
@@ -20,7 +20,23 @@ const Header = () => {
           console.error("Error cargando perfil:", err);
         });
     }
-  }, []);
+  }, []);*/ 
+
+  useEffect(() => {
+  axios
+    .get("https://mi-backend-tz1u.onrender.com/api/verify", {
+      withCredentials: true,
+    })
+    .then((res) => {
+      if (res.data.authenticated) {
+        setUsuario(res.data.user);
+      }
+    })
+    .catch((err) => {
+      console.error("No autenticado", err);
+    });
+}, []);
+
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
