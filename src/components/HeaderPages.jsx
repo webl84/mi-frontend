@@ -120,7 +120,7 @@ console.log("Usuario cargado en Header:", usuario); // 👈 agrega aquí
                       className="w-full h-full object-cover"
                     /> */} 
                     <img
-  src={usuario.foto || `https://api.dicebear.com/7.x/micah/svg?seed=${usuario.id}`}
+  src={usuarioId.foto || `https://api.dicebear.com/7.x/micah/svg?seed=${usuario.id}`}
   alt="avatar"
   className="w-full h-full object-cover"
 />
