@@ -45,10 +45,7 @@ console.log("Usuario cargado en Header:", usuario); // 👈 agrega aquí
     if (parts.length === 2) return parts.pop().split(";").shift();
   };
 */
-const avatarSrc = data.foto
-    ? (data.foto.startsWith('http') ? data.foto : `https://mi-backend-tz1u.onrender.com/${data.foto.replace(/^\/+/, '')}`)
-    : data.avatar || `https://api.dicebear.com/7.x/micah/svg?seed=${usuarioId}`;
-  
+
   const handleLogout = () => {
     localStorage.removeItem("usuarioId");
     document.cookie = "usuarioId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -110,7 +107,7 @@ const avatarSrc = data.foto
                   onClick={() => setSubmenuAbierto(!submenuAbierto)}
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden border">
-                    {/*  <img
+                 <img
                       src={
                         usuario.foto
                           ? usuario.foto.startsWith("http")
@@ -122,8 +119,8 @@ const avatarSrc = data.foto
                       }
                       alt="avatar"
                       className="w-full h-full object-cover"
-                    /> */} 
-                                  <img src={avatarSrc} alt="avatar" className="w-10 h-10 rounded-full border" />
+                    /> 
+                                    {/*   <img src={avatarSrc} alt="avatar" className="w-10 h-10 rounded-full border" />*/} 
 
                   </div>
                   <span>{usuario.nombre}</span>
