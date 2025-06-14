@@ -27,10 +27,6 @@ function EditarResena() {
 
   useEffect(() => {
     const usuarioId = Cookies.get("usuarioId");
-    if (!usuarioId) {
-      navigate("/login");
-      return;
-    }
 
     const fetchData = async () => {
       try {
@@ -81,7 +77,7 @@ function EditarResena() {
     };
 
     fetchData();
-  }, [id, navigate]);
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -153,154 +149,155 @@ function EditarResena() {
         <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
           <h2 className="text-2xl font-bold mb-6 text-center">Editar Reseña</h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Negocio */}
-            <div>
-              <label className="block font-medium mb-1">Selecciona un negocio</label>
-              <Select
-                options={negocios.map((n) => ({ value: n._id, label: n.nombre }))}
-                value={
-                  negocios.find((n) => n._id === formData.negocioId) && {
-                    value: formData.negocioId,
-                    label: negocios.find((n) => n._id === formData.negocioId).nombre,
+          {mensaje && (
+            <p className="text-center mb-4 font-semibold text-red-600">{mensaje}</p>
+          )}
+
+          {mensaje.includes("permiso") ? null : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Negocio */}
+              <div>
+                <label className="block font-medium mb-1">Selecciona un negocio</label>
+                <Select
+                  options={negocios.map((n) => ({ value: n._id, label: n.nombre }))}
+                  value={
+                    negocios.find((n) => n._id === formData.negocioId) && {
+                      value: formData.negocioId,
+                      label: negocios.find((n) => n._id === formData.negocioId).nombre,
+                    }
                   }
-                }
-                onChange={(opt) =>
-                  setFormData((prev) => ({ ...prev, negocioId: opt.value }))
-                }
-                className="w-full"
-              />
-            </div>
-
-            {/* Título */}
-            <div>
-              <label className="block font-medium mb-1">Título</label>
-              <input
-                type="text"
-                name="titulo"
-                value={formData.titulo}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-                placeholder="Título de la reseña"
-              />
-            </div>
-
-            {/* Texto */}
-            <div>
-              <label className="block font-medium mb-1">Reseña</label>
-              <textarea
-                name="texto"
-                value={formData.texto}
-                onChange={handleChange}
-                className="w-full border p-2 rounded resize-none"
-                rows={4}
-                placeholder="Describe tu experiencia..."
-              />
-            </div>
-
-            {/* Calificación */}
-            <div>
-              <label className="block font-medium mb-1">Calificación</label>
-              <select
-                name="rating"
-                value={formData.rating}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-              >
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <option key={n} value={n}>
-                    {n} ⭐
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Fotos existentes */}
-            {fotosExistentes.length > 0 && (
-              <div>
-                <p className="font-medium mb-2">Fotos actuales (marca para eliminar):</p>
-                <div className="flex space-x-4 overflow-x-auto">
-                  {fotosExistentes.map((foto, i) => (
-                    <div key={i} className="relative w-24 h-24">
-                      <img
-                        src={`${URL_BASE}${foto}`}
-                        alt={`Foto ${i + 1}`}
-                        className={`w-full h-full object-cover rounded border ${
-                          fotosAEliminar.includes(foto) ? "opacity-50 grayscale" : ""
-                        }`}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => toggleEliminarFoto(foto)}
-                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                        title={
-                          fotosAEliminar.includes(foto)
-                            ? "Desmarcar para eliminar"
-                            : "Marcar para eliminar"
-                        }
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                  onChange={(opt) =>
+                    setFormData((prev) => ({ ...prev, negocioId: opt.value }))
+                  }
+                  className="w-full"
+                />
               </div>
-            )}
 
-            {/* Fotos nuevas */}
-            {formData.foto.length > 0 && (
+              {/* Título */}
               <div>
-                <p className="font-medium mb-2">Nuevas fotos seleccionadas:</p>
-                <div className="flex space-x-4 overflow-x-auto">
-                  {formData.foto.map((file, i) => {
-                    const url = URL.createObjectURL(file);
-                    return (
+                <label className="block font-medium mb-1">Título</label>
+                <input
+                  type="text"
+                  name="titulo"
+                  value={formData.titulo}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                  placeholder="Título de la reseña"
+                />
+              </div>
+
+              {/* Texto */}
+              <div>
+                <label className="block font-medium mb-1">Reseña</label>
+                <textarea
+                  name="texto"
+                  value={formData.texto}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded resize-none"
+                  rows={4}
+                  placeholder="Describe tu experiencia..."
+                />
+              </div>
+
+              {/* Calificación */}
+              <div>
+                <label className="block font-medium mb-1">Calificación</label>
+                <select
+                  name="rating"
+                  value={formData.rating}
+                  onChange={handleChange}
+                  className="w-full border p-2 rounded"
+                >
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <option key={n} value={n}>
+                      {n} ⭐
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Fotos existentes */}
+              {fotosExistentes.length > 0 && (
+                <div>
+                  <p className="font-medium mb-2">Fotos actuales (marca para eliminar):</p>
+                  <div className="flex space-x-4 overflow-x-auto">
+                    {fotosExistentes.map((foto, i) => (
                       <div key={i} className="relative w-24 h-24">
                         <img
-                          src={url}
-                          alt={`Nueva ${i + 1}`}
-                          className="w-full h-full object-cover rounded border"
+                          src={`${URL_BASE}${foto}`}
+                          alt={`Foto ${i + 1}`}
+                          className={`w-full h-full object-cover rounded border ${
+                            fotosAEliminar.includes(foto) ? "opacity-50 grayscale" : ""
+                          }`}
                         />
                         <button
                           type="button"
-                          onClick={() => eliminarNuevaFoto(i)}
+                          onClick={() => toggleEliminarFoto(foto)}
                           className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                          title="Eliminar foto"
+                          title={
+                            fotosAEliminar.includes(foto)
+                              ? "Desmarcar para eliminar"
+                              : "Marcar para eliminar"
+                          }
                         >
                           ✕
                         </button>
                       </div>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </div>
+              )}
+
+              {/* Fotos nuevas */}
+              {formData.foto.length > 0 && (
+                <div>
+                  <p className="font-medium mb-2">Nuevas fotos seleccionadas:</p>
+                  <div className="flex space-x-4 overflow-x-auto">
+                    {formData.foto.map((file, i) => {
+                      const url = URL.createObjectURL(file);
+                      return (
+                        <div key={i} className="relative w-24 h-24">
+                          <img
+                            src={url}
+                            alt={`Nueva ${i + 1}`}
+                            className="w-full h-full object-cover rounded border"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => eliminarNuevaFoto(i)}
+                            className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                            title="Eliminar foto"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Input archivos */}
+              <div>
+                <label className="block font-medium mb-1">Agregar nuevas fotos</label>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="w-full"
+                />
               </div>
-            )}
 
-            {/* Input archivos */}
-            <div>
-              <label className="block font-medium mb-1">Agregar nuevas fotos</label>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full"
-              />
-            </div>
-
-            {/* Mensaje */}
-            {mensaje && (
-              <p className="text-center mt-4 font-semibold text-red-600">{mensaje}</p>
-            )}
-
-            {/* Botón submit */}
-            <button
-              type="submit"
-              className="bg-green-600 hover:bg-green-700 transition-colors text-white font-bold py-2 px-4 rounded w-full"
-            >
-              Guardar cambios
-            </button>
-          </form>
+              {/* Botón submit */}
+              <button
+                type="submit"
+                className="bg-green-600 hover:bg-green-700 transition-colors text-white font-bold py-2 px-4 rounded w-full"
+              >
+                Guardar cambios
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>
