@@ -29,22 +29,26 @@ const EditarPerfil = () => {
 
   const [estiloSeleccionado, setEstiloSeleccionado] = useState('micah');
 
-  useEffect(() => {
-    const id = localStorage.getItem('usuarioId') || getCookie('usuarioId');
-    if (id) {
-      setUsuarioId(id);
-      axios.get(`https://mi-backend-tz1u.onrender.com/api/usuarios/perfil/${id}`)
-        .then(response => {
-          setData(response.data);
-          setNombre(response.data.nombre);
-          setEmail(response.data.email);
-          setAvatarSeleccionado(response.data.foto || `https://api.dicebear.com/7.x/${estiloSeleccionado}/svg?seed=${id}`);
-        })
-        .catch(error => {
-          console.error('Error al cargar los datos del usuario', error);
-        });
-    }
-  }, []);
+ useEffect(() => {
+  axios
+    .get("https://mi-backend-tz1u.onrender.com/api/usuarios/perfil", {
+      withCredentials: true, // Importante para enviar la cookie
+    })
+    .then((response) => {
+      const datos = response.data;
+      setUsuarioId(datos._id);
+      setData(datos);
+      setNombre(datos.nombre);
+      setEmail(datos.email);
+      setAvatarSeleccionado(
+        datos.foto || `https://api.dicebear.com/7.x/${estiloSeleccionado}/svg?seed=${datos._id}`
+      );
+    })
+    .catch((error) => {
+      console.error("Error al cargar los datos del usuario", error);
+    });
+}, [estiloSeleccionado]);
+
 
   const getCookie = (name) => { 
     const value = `; ${document.cookie}`;
@@ -80,14 +84,24 @@ const EditarPerfil = () => {
       datosActualizados.append('foto', avatarSeleccionado);
     }
 
-    axios.put(`https://mi-backend-tz1u.onrender.com/api/usuarios/${usuarioId}/actualizarPerfil`, datosActualizados)
-      .then(response => {
-        alert('Perfil actualizado correctamente');
-        setData(response.data);
-      })
-      .catch(error => {
-        console.error('Error al actualizar el perfil', error);
-      });
+    axios.put(
+  "https://mi-backend-tz1u.onrender.com/api/usuarios/actualizarPerfil",
+  datosActualizados,
+  {
+    withCredentials: true, // Necesario para enviar la cookie
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  }
+)
+  .then((response) => {
+    alert("Perfil actualizado correctamente");
+    setData(response.data);
+  })
+  .catch((error) => {
+    console.error("Error al actualizar el perfil", error);
+  });
+
   };
 
   return (
