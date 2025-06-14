@@ -1,124 +1,148 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import HeaderPages from "../components/HeaderPages";
-import Footer from "../components/Footer";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const EditarPerfil = () => {
   const [usuarioId, setUsuarioId] = useState(null);
-  const [nombre, setNombre] = useState('');
-  const [email, setEmail] = useState('');
-  const [avatarSeleccionado, setAvatarSeleccionado] = useState('');
-  const [fotoArchivo, setFotoArchivo] = useState(null);
-  const [estiloSeleccionado, setEstiloSeleccionado] = useState('micah');
-
-  const estilosDisponibles = [
-    'micah', 'bottts', 'pixel-art', 'adventurer', 'avataaars',
-    'croodles', 'lorelei', 'big-smile'
-  ];
-
-  const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  };
+  const [datosUsuario, setDatosUsuario] = useState({
+    nombre: "",
+    email: "",
+    foto: null,
+  });
+  const [nuevaFoto, setNuevaFoto] = useState(null);
 
   useEffect(() => {
-    const id = localStorage.getItem('usuarioId') || getCookie('usuarioId');
-    console.log('Obtenido usuarioId:', id);
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwt_decode(token);
+        const id = decoded.id || decoded._id || decoded.userId;
 
-    if (id) {
-      setUsuarioId(id);
-
-      axios.get(`https://mi-backend-tz1u.onrender.com/api/usuarios/perfil/${id}`)
-        .then(response => {
-          console.log('Datos recibidos del perfil:', response.data);
-          const { nombre, email, foto } = response.data;
-
-          setNombre(nombre || '');
-          setEmail(email || '');
-          setAvatarSeleccionado(foto || `https://api.dicebear.com/7.x/${estiloSeleccionado}/svg?seed=${id}`);
-        })
-        .catch(error => {
-          console.error('Error al cargar perfil:', error.response?.data || error.message);
-        });
+        if (id) {
+          setUsuarioId(id);
+          obtenerDatosUsuario(id);
+        } else {
+          console.warn("No se encontró el ID en el token.");
+        }
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+      }
     } else {
-      console.warn('No se encontró el ID del usuario en localStorage ni cookies.');
+      console.warn("No se encontró token en localStorage.");
     }
   }, []);
 
-  const generarAvatares = (cantidad, estilo) => {
-    if (!usuarioId) return [];
-    return Array.from({ length: cantidad }, (_, i) =>
-      `https://api.dicebear.com/7.x/${estilo}/svg?seed=${usuarioId}-${i + 1}`
-    );
+  const obtenerDatosUsuario = async (id) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/usuarios/perfil/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      const { nombre, email, foto } = response.data;
+      setDatosUsuario({ nombre, email, foto });
+    } catch (error) {
+      console.error("Error al obtener datos del usuario:", error);
+    }
   };
 
-  const seleccionarAvatar = (avatar) => {
-    setAvatarSeleccionado(avatar);
-    setFotoArchivo(null);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setDatosUsuario((prevDatos) => ({
+      ...prevDatos,
+      [name]: value,
+    }));
   };
 
-  const manejarCambioFoto = (e) => {
-    setFotoArchivo(e.target.files[0]);
+  const handleFotoChange = (e) => {
+    const file = e.target.files[0];
+    setNuevaFoto(file);
   };
 
-  const guardarPerfil = () => {
-    if (!usuarioId) return alert("No se encontró ID del usuario.");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const datosActualizados = new FormData();
-    datosActualizados.append('nombre', nombre);
-    datosActualizados.append('email', email);
-
-    if (fotoArchivo) {
-      datosActualizados.append('foto', fotoArchivo);
-    } else if (avatarSeleccionado) {
-      datosActualizados.append('foto', avatarSeleccionado);
+    if (!usuarioId) {
+      console.error("No se puede enviar el formulario sin un ID de usuario.");
+      return;
     }
 
-    axios.put(`https://mi-backend-tz1u.onrender.com/api/usuarios/${usuarioId}/actualizarPerfil`, datosActualizados)
-      .then(response => {
-        alert('Perfil actualizado correctamente');
-        const { nombre, email, foto } = response.data;
-        setNombre(nombre);
-        setEmail(email);
-        setAvatarSeleccionado(foto);
-      })
-      .catch(error => {
-        console.error('Error al actualizar el perfil', error.response?.data || error.message);
-      });
+    const formData = new FormData();
+    formData.append("nombre", datosUsuario.nombre);
+    formData.append("email", datosUsuario.email);
+    if (nuevaFoto) {
+      formData.append("foto", nuevaFoto);
+    }
+
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/usuarios/actualizar-perfil/${usuarioId}`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Perfil actualizado:", response.data);
+      alert("Perfil actualizado con éxito");
+    } catch (error) {
+      console.error("Error al actualizar perfil:", error);
+      alert("Hubo un error al actualizar el perfil");
+    }
   };
 
   return (
-    <div>
-      <HeaderPages />
-      <div className="perfil flex justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
-          <h1 className="text-2xl font-semibold mb-4">Editar Perfil</h1>
-
-          <div className="flex items-center mb-4">
-            <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-300 mr-4">
-              <img src={avatarSeleccionado} alt="Foto de perfil" className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <p className="text-xl font-medium">{nombre}</p>
-              <p className="text-sm text-gray-600">{email}</p>
-            </div>
-          </div>
-
-          {/* Avatares y selección de estilo */}
-          {/* ... mismos bloques anteriores ... */}
-
-          <div className="mt-6">
-            <button
-              onClick={guardarPerfil}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Guardar Cambios
-            </button>
-          </div>
+    <div className="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md space-y-4">
+      <h2 className="text-xl font-bold">Editar Perfil</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block mb-1 font-semibold">Nombre</label>
+          <input
+            type="text"
+            name="nombre"
+            value={datosUsuario.nombre}
+            onChange={handleInputChange}
+            className="w-full border border-gray-300 rounded px-3 py-2"
+            required
+          />
         </div>
-      </div>
-      <Footer />
+        <div>
+          <label className="block mb-1 font-semibold">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={datosUsuario.email}
+            onChange={handleInputChange}
+            className="w-full border border-gray-300 rounded px-3 py-2"
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-1 font-semibold">Foto de Perfil</label>
+          {datosUsuario.foto && (
+            <img
+              src={`${import.meta.env.VITE_API_URL}/${datosUsuario.foto}`}
+              alt="Foto de perfil"
+              className="w-24 h-24 rounded-full mb-2"
+            />
+          )}
+          <input
+            type="file"
+            name="foto"
+            accept="image/*"
+            onChange={handleFotoChange}
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Guardar Cambios
+        </button>
+      </form>
     </div>
   );
 };
