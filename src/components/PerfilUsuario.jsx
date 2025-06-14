@@ -1,144 +1,77 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 
 const EditarPerfil = () => {
-  const [usuarioId, setUsuarioId] = useState(null);
-  const [datosUsuario, setDatosUsuario] = useState({
-    nombre: "",
-    email: "",
-    foto: null,
-  });
-  const [nuevaFoto, setNuevaFoto] = useState(null);
+  const [usuario, setUsuario] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const decoded = jwt_decode(token);
-        const id = decoded.id || decoded._id || decoded.userId;
+    const obtenerUsuario = async () => {
+      const usuarioId = localStorage.getItem('usuarioId');
 
-        if (id) {
-          setUsuarioId(id);
-          obtenerDatosUsuario(id);
-        } else {
-          console.warn("No se encontró el ID en el token.");
-        }
-      } catch (error) {
-        console.error("Error al decodificar el token:", error);
+      if (!usuarioId) {
+        console.error("No se encontró el ID del usuario en localStorage");
+        setCargando(false);
+        return;
       }
-    } else {
-      console.warn("No se encontró token en localStorage.");
-    }
-  }, []);
 
-  const obtenerDatosUsuario = async (id) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/usuarios/perfil/${id}`,
-        {
+      try {
+        const { data } = await axios.get(`${API_URL}/api/usuarios/perfil/${usuarioId}`, {
           withCredentials: true,
-        }
-      );
-      const { nombre, email, foto } = response.data;
-      setDatosUsuario({ nombre, email, foto });
-    } catch (error) {
-      console.error("Error al obtener datos del usuario:", error);
-    }
-  };
+        });
+        setUsuario(data);
+      } catch (error) {
+        console.error("Error al obtener datos del usuario:", error);
+      } finally {
+        setCargando(false);
+      }
+    };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setDatosUsuario((prevDatos) => ({
-      ...prevDatos,
-      [name]: value,
-    }));
-  };
+    obtenerUsuario();
+  }, [API_URL]);
 
-  const handleFotoChange = (e) => {
-    const file = e.target.files[0];
-    setNuevaFoto(file);
-  };
+  if (cargando) {
+    return <div className="text-center mt-10">Cargando perfil...</div>;
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!usuarioId) {
-      console.error("No se puede enviar el formulario sin un ID de usuario.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("nombre", datosUsuario.nombre);
-    formData.append("email", datosUsuario.email);
-    if (nuevaFoto) {
-      formData.append("foto", nuevaFoto);
-    }
-
-    try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/usuarios/actualizar-perfil/${usuarioId}`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("Perfil actualizado:", response.data);
-      alert("Perfil actualizado con éxito");
-    } catch (error) {
-      console.error("Error al actualizar perfil:", error);
-      alert("Hubo un error al actualizar el perfil");
-    }
-  };
+  if (!usuario) {
+    return <div className="text-center mt-10 text-red-500">No se pudo cargar el perfil del usuario.</div>;
+  }
 
   return (
-    <div className="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md space-y-4">
-      <h2 className="text-xl font-bold">Editar Perfil</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold mb-4">Editar Perfil</h1>
+      <form className="space-y-4">
         <div>
-          <label className="block mb-1 font-semibold">Nombre</label>
+          <label className="block text-sm font-medium">Nombre</label>
           <input
             type="text"
-            name="nombre"
-            value={datosUsuario.nombre}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded px-3 py-2"
-            required
+            defaultValue={usuario.nombre}
+            className="w-full border rounded px-3 py-2"
           />
         </div>
         <div>
-          <label className="block mb-1 font-semibold">Email</label>
+          <label className="block text-sm font-medium">Email</label>
           <input
             type="email"
-            name="email"
-            value={datosUsuario.email}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded px-3 py-2"
-            required
+            defaultValue={usuario.email}
+            className="w-full border rounded px-3 py-2"
+            disabled
           />
         </div>
         <div>
-          <label className="block mb-1 font-semibold">Foto de Perfil</label>
-          {datosUsuario.foto && (
-            <img
-              src={`${import.meta.env.VITE_API_URL}/${datosUsuario.foto}`}
-              alt="Foto de perfil"
-              className="w-24 h-24 rounded-full mb-2"
-            />
-          )}
+          <label className="block text-sm font-medium">Ubicación</label>
           <input
-            type="file"
-            name="foto"
-            accept="image/*"
-            onChange={handleFotoChange}
+            type="text"
+            defaultValue={usuario.ubicacion || ""}
+            className="w-full border rounded px-3 py-2"
           />
         </div>
+        {/* Agrega más campos si lo deseas */}
         <button
           type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
         >
           Guardar Cambios
         </button>
